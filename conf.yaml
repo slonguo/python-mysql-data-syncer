@@ -1,0 +1,92 @@
+
+env:
+  env_var: env
+  env_default: dev
+
+load_enabled: 1
+sync_enabled: 1
+es_mapping_enabled: 1
+
+
+# 1: use mysqldump to load data
+# 2: use select query to load data
+data_load_type: 2
+load_step: 3000
+
+# 1: use binlog sync
+# 2: manually query db every query_sync.query_interval minutes
+data_sync_type: 2
+
+
+
+binlog_sync:
+  record_file: binlog.info
+
+query_sync:
+  query_interval: 5 # minutes
+  record_file: query.info # save last query timestamp
+
+
+
+logging:
+  folder: "log"
+  log_file: "data.log"
+
+mysql_conf:
+  -
+    env: dev
+    host: addr1
+    port: 10028
+    user: user
+    passwd: passwd
+    charset: utf8
+    server_id: 1111
+  -
+    env: test
+    host: addr2
+    port: 20028
+    user: user
+    passwd: passwd
+    charset: utf8
+    server_id: 1122
+
+es_conf:
+  -
+    env: dev
+    addr: http://addr1:9200
+    timeout: 10
+    shard_num: 3
+    replica_num: 0
+    bulk_chunk_size: 5000
+  -
+    env: test
+    addr: http://addr2:9200
+    timeout: 10
+    shard_num: 3
+    replica_num: 0
+    bulk_chunk_size: 5000
+
+
+rules:
+  -
+    mysql:
+      db: item_db
+      table_fmt: order_tab_%08d
+      table_cnt: 97
+      ignore_fields: []
+      unique_ids: ["order_id"]
+      stamp_param: mtime
+    es:
+      type: order_tab
+      fields_mapper: []
+  -
+    mysql:
+      db: item_db
+      table_fmt: sku_tab_%08d
+      table_cnt: 10
+      ignore_fields: []
+      unique_ids: ["sku_id",]
+      stamp_param: mtime
+    es:
+      type: sku_tab
+      fields_mapper: []

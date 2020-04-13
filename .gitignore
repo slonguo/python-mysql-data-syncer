@@ -99,3 +99,10 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+.git/
+.idea/
+*.info
+*.log
+.vscode
+.git_bak
