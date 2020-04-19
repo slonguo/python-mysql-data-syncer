@@ -129,8 +129,6 @@ class DBSyncer(object):
 		if self.es_mapping_enabled and not self.es_conf:
 			raise ElasticsearchConfigException()
 
-		self.go_conf = self.config.get('go_conf', {})
-
 	@property
 	def load_dump_open(self):
 		return self.load_enabled == 1 and self.data_load_type == 1
@@ -289,7 +287,7 @@ class DBSyncer(object):
 		if db and db not in self.schema_d:
 			self.schema_d[db] = {
 				key: {} for key in
-				['table_fmt_map', 'tables_d', 'go_consts']
+				['table_fmt_map', 'tables_d',]
 			}
 
 	def _init_sync_conf(self):
@@ -674,11 +672,6 @@ class DBSyncer(object):
 				self.sync_enabled,
 				self.data_sync_type)
 
-	def _gen_go_code(self):
-		if not self.go_conf.get('go_gen'):
-			return
-		pass
-
 	def _es_client(self):
 		return Elasticsearch(
 			self.es_conf['addr'],
@@ -744,9 +737,6 @@ class DBSyncer(object):
 
 			self.parse()
 			self._do_inits()
-
-			self._gen_go_code()
-
 			self._load_data()
 			self._sync_data()
 		except Exception:
