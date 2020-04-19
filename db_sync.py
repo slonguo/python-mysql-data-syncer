@@ -71,10 +71,8 @@ def pretty_print_msg(data):
 		print(json.dumps(data, indent=4))
 	else:
 		print(data)
-	pass
 
-
-class Schema(object):
+class DBSyncer(object):
 	schema_d = {}
 	log_file = None
 	log_pos = None
@@ -763,4 +761,4 @@ def init_env():
 
 if __name__ == '__main__':
 	init_env()
-	Schema().run()
+	DBSyncer().run()
